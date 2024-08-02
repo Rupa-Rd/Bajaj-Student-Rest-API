@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../model/user'); // Adjust the path to your User model
-
-// Getting user data based on "data" array
+const User = require('../model/user'); 
 router.get('/data', async (req, res) => {
     const data = req.query.data ? req.query.data.split(',') : []; // Assuming data is passed as query parameter in URL
 
@@ -10,19 +8,21 @@ router.get('/data', async (req, res) => {
         return res.status(400).json({ is_success: false, message: 'Data parameter is required' });
     }
 
+    const numbers = data.filter(item => !isNaN(item)).map(Number);
+    const alphabets = data.filter(item => isNaN(item));
+
     try {
         // Find users where numbers, alphabets, or highest_alphabet match any element in data array
         const users = await User.find({
             $or: [
-                { numbers: { $in: data.map(Number) } }, // Convert data to numbers for comparison
-                { alphabets: { $in: data } },
-                { highest_alphabet: { $in: data } }
+                { numbers: { $in: numbers } },
+                { alphabets: { $in: alphabets } },
+                { highest_alphabet: { $in: alphabets } }
             ]
         });
 
         if (users.length > 0) {
-            const user = users[0]; // Assuming you want to return the first match
-            res.json({
+            const responseData = users.map(user => ({
                 is_success: true,
                 user_id: user.user_id,
                 email: user.email,
@@ -30,7 +30,8 @@ router.get('/data', async (req, res) => {
                 numbers: user.numbers,
                 alphabets: user.alphabets,
                 highest_alphabet: user.highest_alphabet
-            });
+            }));
+            res.json(responseData);
         } else {
             res.status(404).json({ is_success: false, message: 'No matching user found' });
         }

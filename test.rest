@@ -1,6 +1,6 @@
 ###
 
-GET http://localhost:3000/bfhl/data?data=z
+GET http://localhost:3000/bfhl/data?data=z,y
 
 ###
 
