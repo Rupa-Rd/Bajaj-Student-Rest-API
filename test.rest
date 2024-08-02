@@ -1,0 +1,23 @@
+###
+
+GET http://localhost:3000/bfhl/data?data=z
+
+###
+
+###
+
+DELETE http://localhost:8000/bookStack/6652a81f5ebb94732e850fdc
+
+###
+
+POST http://localhost:3000/bfhl
+Content-Type: application/json
+
+{
+    "user_id": "john_doe_17091999",
+    "email": "john@xyz.com",
+    "roll_number": "ABCD123",
+    "numbers": [2, 4, 5, 92],
+    "alphabets": ["A", "C", "z"],
+    "highest_alphabet": ["z"]
+}
